@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+<div>
+    <br><br>
+    Enter Username <input type="text" id="nm">
+    <br><br>
+    Enter Password <input type="text" id="ps">
+    <br><br>
+    Confirm Password <input type="text" id="cs">
+    <br><br>
+</div>
+<div>
+    <button onClick="refresh()">Refresh</button>
+    <button onClick="store()">Store</button>
+    <button onClick="login()">Login</button>
+    <br><br>
+</div>
+
+<script>
+
+    let key = "abc"; 
+
+    function padKey(key, length) {
+        while (key.length < length) {
+            key += "x"; // pad with 'x'
+        }
+        return key;
+    }
+
+
+function repeatKey(key, length) {
+    return key.repeat(Math.ceil(length / key.length)).slice(0, length);
+}
+
+function vernamEncryptDecrypt(text, key) {
+    text = text.toLowerCase();
+    key = repeatKey(key, text.length);
+
+    let result = "";
+    for (let i = 0; i < text.length; i++) {
+        let p = text.charCodeAt(i) - 96; 
+        let k = key.charCodeAt(i) - 96; 
+        if (p < 1 || p > 26) {
+            result += text[i];
+        } else {
+   
+            let c = (p + k) % 26;
+            if (c === 0) c = 26; 
+            result += String.fromCharCode(c + 96);
+        }
+    }
+    return result;
+}
+
+
+
+    function store() {
+        let username = document.getElementById("nm").value;
+        let password = document.getElementById("ps").value;
+        let confirmPassword = document.getElementById("cs").value;
+
+        if (password !== confirmPassword) {
+            alert("Passwords do not match!");
+            return;
+        }
+
+        let encryptedPassword = vernamEncryptDecrypt(password, key);
+
+        alert("Vernam Cipher Output (Encrypted): " + encryptedPassword);
+
+      
+        localStorage.setItem("username", username);
+        localStorage.setItem("password", btoa(encryptedPassword));
+
+        alert("Registration successful! Password stored securely.");
+    }
+
+    function login() {
+        let username = document.getElementById("nm").value;
+        let password = document.getElementById("ps").value;
+
+        let storedUser = localStorage.getItem("username");
+        let storedEncrypted = localStorage.getItem("password");
+
+        if (!storedUser || !storedEncrypted) {
+            alert("No user registered!");
+            return;
+        }
+
+        let decryptedPassword = vernamEncryptDecrypt(atob(storedEncrypted), key);
+
+        if (username === storedUser && password.toLowerCase() === decryptedPassword) {
+            alert("Login successful!");
+        } else {
+            alert("Invalid username or password!");
+        }
+    }
+
+    function refresh() {
+        document.getElementById("nm").value = "";
+        document.getElementById("ps").value = "";
+        document.getElementById("cs").value = "";
+    }
+</script>
+
+</body>
+</html>

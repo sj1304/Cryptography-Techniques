@@ -1,0 +1,62 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Modified Caesar Cipher</title>
+
+    <script>
+        function encrypt() {
+            let key = prompt("Enter the key:");
+            key = parseInt(key);
+
+            if (isNaN(key)) {
+                alert("Please enter a valid number.");
+                return;
+            }
+
+            let plaintxt = document.getElementById("plaintxt").value;
+            let ciphertxt = "";
+
+            for (let i = 0; i < plaintxt.length; i++) {
+                let code = plaintxt.charCodeAt(i);
+
+                if (code >= 65 && code <= 90) {
+                    code = ((code - 65 + key) % 26 + 26) % 26 + 65;
+                }
+
+              
+                else if (code >= 97 && code <= 122) {
+                    code = ((code - 97 + key) % 26 + 26) % 26 + 97;
+                }
+                
+                ciphertxt += String.fromCharCode(code);
+            }
+
+            document.getElementById("ciphertxt").value = ciphertxt;
+        }
+    </script>
+</head>
+
+<body>
+    <div>
+        <h1>MODIFIED CAESER CIPHER</h1>
+
+        Plain text
+        <br>
+
+        <textarea id="plaintxt" rows="5"></textarea>
+
+        <div style="padding-left:70px; font-size:30px;">
+            <button style="font-size:30px" onclick="encrypt()">⇩</button>
+        </div>
+
+        Cipher text
+        <br>
+
+        <textarea id="ciphertxt" rows="5"></textarea>
+    </div>
+</body>
+</html>
